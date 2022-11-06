@@ -1,4 +1,3 @@
-
 #include <GL/glut.h>
 using namespace std;
 #include <bits/stdc++.h>
@@ -12,9 +11,11 @@ void Bus();
 void road();
 void Building();
 void Bird();
+void Mountain();
 void white_building1();
 void white_building2();
 void airplane_pole();
+void sky_scraper();
 void display()
 {
     glClearColor(0.4, 0.4, 1, 1.0f);
@@ -25,10 +26,13 @@ void display()
     // gluOrtho2D(-500, 500, -500, 500);
     gluOrtho2D(0, 2000, 0, 2000);
 
+    Mountain();
     road();
+    sky_scraper();
     // Bird();
     Airplane();
     Building();
+
     airplane_pole();
     white_building1();
     white_building2();
@@ -89,6 +93,98 @@ int main(int argc, char **argv)
     glutKeyboardFunc(keyboard);
     glutMainLoop(); // Enter the event-processing loop
     return 0;
+}
+void sky_scraper()
+{
+
+    glPushMatrix();
+    glTranslated(1000, 400, 0.0);
+    // glScaled(0.5,0.5,0.0);
+    // outer layer
+    glBegin(GL_QUADS);
+    glColor3ub(92,77,69);
+    glVertex2f(0, 0);
+    glVertex2f(200, 0);
+    glVertex2f(200, 700);
+    glVertex2f(0, 700);
+
+    glColor3ub(65, 72, 79);
+    glVertex2f(200, 0);
+    glVertex2f(200, 700);
+    glVertex2f(400, 700);
+    glVertex2f(400, 0);
+    glEnd();
+
+    glBegin(GL_QUADS);
+    glColor3ub(193, 215, 215);
+    int inc = 0;
+    for (int i = 0; i < 9; i++)
+    {
+        glVertex2f(250,40 + inc);
+        glVertex2f(250, 70 + inc);
+        glVertex2f(350, 70 + inc);
+        glVertex2f(350, 40 + inc);
+        inc = inc + 70;
+    }
+    glEnd();
+
+
+    //building 1 glass
+    glBegin(GL_QUADS);
+    glColor3ub(193, 215, 215);
+    inc = 0;
+    for (int i = 0; i < 9; i++)
+    {
+        glVertex2f(30,30 + inc);
+        glVertex2f(30, 70 + inc);
+        glVertex2f(50, 70 + inc);
+        glVertex2f(50, 30 + inc);
+
+
+        glVertex2f(80,30 + inc);
+        glVertex2f(80, 70 + inc);
+        glVertex2f(100, 70 + inc);
+        glVertex2f(100, 30 + inc);
+
+        glVertex2f(130,30 + inc);
+        glVertex2f(130, 70 + inc);
+        glVertex2f(150, 70 + inc);
+        glVertex2f(150, 30 + inc);
+
+        inc = inc + 70;
+    }
+    glEnd();
+    glPopMatrix();
+}
+void Mountain()
+{
+    glPushMatrix();
+    // glScaled(0.5,0.5,0.0);
+    // outer layer
+    glBegin(GL_POLYGON);
+    glColor3f(0, 0.7, 0);
+    glVertex2f(0, 500);
+    glVertex2f(100, 400);
+    glVertex2f(300, 900);
+    glVertex2f(500, 1000);
+    glVertex2f(800, 800);
+    glVertex2f(1300, 500);
+    glVertex2f(1400, 400);
+    glVertex2f(0, 400);
+    // glVertex2f(1500,300);
+    // glVertex2f(2000,600);
+    // glVertex2f(2100, 400);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3f(0, 0.7, 0);
+    glVertex2f(1200, 400);
+    glVertex2f(1400, 600);
+    glVertex2f(1700, 800);
+    glVertex2f(2200, 400);
+    glVertex2f(1200, 400);
+    glEnd();
+    glPopMatrix();
 }
 void white_building1()
 {
@@ -197,7 +293,7 @@ void white_building2()
 void airplane_pole()
 {
     glPushMatrix();
-    glTranslated(1600, 400, 0.0);
+    glTranslated(1500, 400, 0.0);
     // glScaled(0.5,0.5,0.0);
     // outer layer
     glBegin(GL_QUADS);
@@ -289,6 +385,7 @@ void Building()
     glVertex2f(400, 100);
     glVertex2f(400, 0);
     glEnd();
+
     glPopMatrix();
     // glColor3f(1,1,1);
     // glPointSize(10);
@@ -474,7 +571,7 @@ void Airplane()
 }
 void Bus()
 {
-    glTranslated(-400,-400,0);
+    glTranslated(-400, -400, 0);
     glPushMatrix();
     glTranslated(a, 50.0, 0.0);
     glScaled(40.0, 40.0, 0.0);
@@ -488,7 +585,7 @@ void Bus()
     glVertex2f(32, 8);
     glEnd();
     // window frame
-    glColor3f(0,1,1);
+    glColor3f(0, 1, 1);
     glBegin(GL_POLYGON);
     glVertex2f(26.1, 9.5);
     glVertex2f(26.1, 10.5);
@@ -496,7 +593,7 @@ void Bus()
     glVertex2f(31.8, 9.5);
     glEnd();
     // Doors
-    glColor3f(1,0, 1);
+    glColor3f(1, 0, 1);
     glBegin(GL_POLYGON);
     glVertex2f(26.2, 9);
     glVertex2f(26.2, 10.4);
@@ -544,7 +641,7 @@ void Bus()
     glPushMatrix(); // front tyre
     glTranslated(a + 970, 320, 0.0);
     glScaled(20.0, 20.0, 0.0);
-    glColor3f(0.9,0.5,0.5);
+    glColor3f(0.9, 0.5, 0.5);
     glBegin(GL_POLYGON);
     glVertex2f(3.0, 2.5);
     glVertex2f(3.0, 2.6);
@@ -591,7 +688,7 @@ void Bus()
     glPushMatrix(); // back tyre
     glTranslated(a + 1140, 320, 0.0);
     glScaled(20.0, 20.0, 0.0);
-    glColor3f(0.9,0.5,0.5);
+    glColor3f(0.9, 0.5, 0.5);
     glBegin(GL_POLYGON);
     glVertex2f(3.0, 2.5);
     glVertex2f(3.0, 2.6);
