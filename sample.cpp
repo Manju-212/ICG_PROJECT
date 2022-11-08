@@ -10,6 +10,7 @@ int plane_movement = -300;
 int bus_movement = 1500;
 int cloud_movement1 = 0;
 int cloud_movement2 = 0;
+float clear_r = 0.5,clear_g = 0.8,clear_b = 0.9;
 void cloud_circle(float a,float b,int radius);
 void Airplane();
 void Bus();
@@ -63,7 +64,7 @@ void Timer(int value)
         cloud_movement1 = 2200;
     }
     //cloud movement 2
-      if(cloud_movement2>=-700)
+    if(cloud_movement2>=-700)
     {
         cloud_movement2 = cloud_movement2 - 5;
     }
@@ -71,11 +72,23 @@ void Timer(int value)
     {
         cloud_movement2 = 2200;
     }
+    if(clear_r>=0.36)
+    {
+        clear_r -= 0.0001;
+    }
+    if(clear_g>=0.32)
+    {
+        clear_g -= 0.0001;
+    }
+    if(clear_b>=0.64)
+    {
+        clear_b -= 0.0001;
+    }
 	glutPostRedisplay();      // Post re-paint request to activate display()
 }
 void display()
 {
-    glClearColor(0.5, 0.8, 0.9, 1.0f);
+    glClearColor(clear_r,clear_g,clear_b,1.0f);
     // glClearColor(1,1,1, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -89,7 +102,10 @@ void display()
     sky_scraper();
     Sun();
     // Bird();
-    clouds();
+    if(clear_r>=0.38 && clear_g>=0.34 && clear_b>=0.66)
+    {
+        clouds();
+    }
     Airplane();
     Building();
     airplane_pole();
@@ -107,29 +123,14 @@ void keyboard(unsigned char key, int x, int y)
     case 27:
         exit(0);
         break;
-    case 's':
-        plane_movement = plane_movement + 100;
+    case 'n':
+        clear_r = 0.36;
+        clear_g = 0.32;
+        clear_b = 0.64;
         display();
-        break;
-    case 'd':
-        while(bus_movement>=-2000)
-        {
-        bus_movement = bus_movement - 1;
-        display();
-        }
-        // glutTimerFunc(100,display, 0);
-        break;
-    case 'a':
-        while(truck_movement<=2000)
-        {
-        truck_movement = truck_movement + 1;
-        display();
-        } 
         break;
     }
 }
-
-
 int main(int argc, char **argv)
 {
     glutInit(&argc, argv);                 // Initialize GLUT
@@ -137,7 +138,7 @@ int main(int argc, char **argv)
     glutInitWindowSize(320, 320);          // Set the window's initial width & height
     glutInitWindowPosition(100, 100);      // Position the window's initial top-left corner
     glutDisplayFunc(display);              // Register display callback handler for window re-paint
-    //glutKeyboardFunc(keyboard);
+    glutKeyboardFunc(keyboard);
     glutTimerFunc(0, Timer, 0);
     glutMainLoop(); // Enter the event-processing loop
     return 0;
