@@ -1,3 +1,7 @@
+//CED19I003
+//CED19I007
+//MANJUNADH MAGANTI
+//CHAVVA MANJUNATH REDDY
 #include <GL/glut.h>
 using namespace std;
 #include <bits/stdc++.h>
@@ -5,18 +9,28 @@ using namespace std;
 int n = 300;
 int n1 = 300;
 int pl = 0;
-int truck_movement = -200;
-int plane_movement = -300;
-int bus_movement = 1500;
-int cloud_movement1 = 0;
-int cloud_movement2 = 0;
+float a_r = 1,a_g = 0,a_b = 0;
+float truck_movement = -200;
+float plane_movement = -300;
+float bus_movement = 1500;
+float cloud_movement1 = 0;
+float cloud_movement2 = 0;
+float sun_movement = 0;
+float moon_movement = 0;
 float clear_r = 0.5,clear_g = 0.8,clear_b = 0.9;
+void plot_point(float x,float y);
+void plot_circle_point(int a , int b ,float x,float y,int o1,int o2,int o3,int o4,int o5,int o6,int o7,int o8);
+void MPD_Circle(int a,int b,int o1,int o2,int o3,int o4,int o5,int o6,int o7,int o8);
 void cloud_circle(float a,float b,int radius);
+void BDA(float x1, float y1, float x2, float y2);
+void air_circle(float a,float b,int radius);
 void Airplane();
+void board();
 void Bus();
 void truck();
 void road();
 void Sun();
+void Moon();
 void Building();
 void Bird();
 void clouds();
@@ -31,7 +45,7 @@ void Timer(int value)
     glutTimerFunc(refsec, Timer, 10); // next Timer call milliseconds later
     if(truck_movement<=2500)
     {
-      truck_movement = truck_movement + 1;
+      truck_movement = truck_movement + 3;
     }
     else
     {
@@ -39,7 +53,7 @@ void Timer(int value)
     }
      if(bus_movement>=-1500)
     {
-      bus_movement = bus_movement - 1;
+      bus_movement = bus_movement - 3;
     }
     else
     {
@@ -47,7 +61,7 @@ void Timer(int value)
     }
     if(plane_movement<=2500)
     {
-        plane_movement = plane_movement + 5;
+        plane_movement = plane_movement + 10;
     }
     else
     {
@@ -57,7 +71,7 @@ void Timer(int value)
     //cloud movement  1
      if(cloud_movement1>=-2000)
     {
-        cloud_movement1 = cloud_movement1 - 5;
+        cloud_movement1 = cloud_movement1 - 1;
     }
     else
     {
@@ -66,7 +80,7 @@ void Timer(int value)
     //cloud movement 2
     if(cloud_movement2>=-700)
     {
-        cloud_movement2 = cloud_movement2 - 5;
+        cloud_movement2 = cloud_movement2 - 1;
     }
     else
     {
@@ -84,6 +98,20 @@ void Timer(int value)
     {
         clear_b -= 0.0001;
     }
+    sun_movement += 0.2;
+    if(moon_movement<=1000)
+    {
+        moon_movement += 0.2;
+    }
+    if(a_r==1 && a_g==1 && a_b==0)
+    {
+        a_r = 1;a_g = 0;a_b = 0;
+    }
+    else
+    {
+        a_r = 1;a_g = 1;a_b = 0;
+    }
+   
 	glutPostRedisplay();      // Post re-paint request to activate display()
 }
 void display()
@@ -99,10 +127,12 @@ void display()
 
     Mountain();
     road();
+    board();
     sky_scraper();
     Sun();
+    Moon();
     // Bird();
-    if(clear_r>=0.38 && clear_g>=0.34 && clear_b>=0.66)
+    //if(clear_r>=0.38 && clear_g>=0.34 && clear_b>=0.66)
     {
         clouds();
     }
@@ -143,6 +173,203 @@ int main(int argc, char **argv)
     glutMainLoop(); // Enter the event-processing loop
     return 0;
 }
+void plot_point(float x,float y)
+{
+  glBegin(GL_POINTS);
+  glColor3f(1.0f, 0.5f, 0.0f);
+  glVertex2f(x,y);
+  glEnd();
+
+}
+void MPD_Circle(int a,int b,int o1,int o2,int o3,int o4,int o5,int o6,int o7,int o8)
+{
+    float radius = 50;
+    float x = radius;
+    float y = 0;
+    
+    int p = 1 - radius;
+    while(x>=y)
+    {
+    	if(p<0)
+    	{
+    	   p =  p + 2*y + 3;
+    	}
+    	else
+    	{
+    	  x = x - 1;
+    	  p = p  +  2 * (y - x) + 3;
+    	}
+    	plot_circle_point(a,b,x,y,o1,o2,o3,o4,o5,o6,o7,o8);
+    	//plot_point(x,y);
+        y++;
+    }
+}
+void plot_circle_point(int a , int b ,float x,float y,int o1,int o2,int o3,int o4,int o5,int o6,int o7,int o8)
+{
+    if(o1==1)
+    {
+      plot_point(a+x,b+y);
+    }
+    if(o2==1)
+    {
+       plot_point(a+ y,b+x );
+    }
+     if(o3==1)
+    {
+       plot_point(a-y,b+x);
+    }
+     if(o4==1)
+    {
+       plot_point(a-x,b+y);
+    }
+     if(o5==1)
+    {
+       plot_point(a-x,b-y);
+    }
+     if(o6==1)
+    {
+       plot_point(a-y,b-x);
+    }
+     if(o7==1)
+    {
+       plot_point(a + y,b-x);
+    }
+     if(o8==1)
+    {
+       plot_point(a + x,b-y);
+    }
+}
+void BDA(float x1, float y1, float x2, float y2)
+{
+	float dx = x2 - x1;
+	float dy = y2 - y1,step;
+
+	float x, y;
+
+	x = x1;
+	y = y1;
+
+	int x_add = dx/abs(dx);
+	int y_add = dy/abs(dy);
+	    glBegin(GL_POINTS);
+		glColor3f(1.0f, 0.5f, 0.0f);
+		glVertex2i(x, y);
+		glEnd();
+		if (abs(dx) > abs(dy))
+		{
+			float p = (2 * abs(dy)) - abs(dx);
+			for (int i = 0; i < abs(dx); i++)
+			{
+				// cout << p << " ";
+				if (p >= 0)
+				{
+					y = y + y_add;
+					p = p + 2 * abs(dy) - 2*abs(dx);
+				}
+				else
+				{
+					p = p + 2 * abs(dy);
+				}
+				x = x + x_add;
+				glBegin(GL_POINTS);
+				 glColor3f(1.0f, 0.5f, 0.0f);
+				glVertex2i(x, y);
+				glEnd();
+
+			}
+
+	    }
+		else
+		{
+			// cout << "came here for dx";
+			float p = (2 * abs(dx)) - abs(dy);
+			for (int i = 0; i < abs(dy); i++)
+			{
+				// cout << p << " ";
+				if (p >= 0)
+				{
+					x = x + x_add;
+					p = p + 2 * abs(dx) - 2 * abs(dy);
+				}
+				else
+				{
+					p = p + 2 * abs(dx);
+				}
+				y = y + y_add;
+				glBegin(GL_POINTS);
+				glColor3f(1.0f, 0.5f, 0.0f);
+				glVertex2i(x, y);
+				glEnd();
+
+			}
+		}
+
+
+}
+void board()
+{
+    glPushMatrix();
+    glTranslated(1550,400, 0.0);
+    glColor3f(0,0,0);
+    glBegin(GL_QUADS);
+    glVertex2f(200,0);
+    glVertex2f(250,0);
+    glVertex2f(250,300);
+    glVertex2f(200,300);
+    glEnd();
+    glColor3f(1,1,0);
+    glBegin(GL_QUADS);
+    glVertex2f(0,300);
+    glVertex2f(450,300);
+    glVertex2f(450,600);
+    glVertex2f(0,600);
+    glEnd();
+    //I
+    glPointSize(9);
+    BDA(10,500,60,500);
+    BDA(10,400,60,400);
+    BDA(35,400,35,500);
+
+    //I
+    BDA(80,500,130,500);
+    BDA(80,400,130,400);
+    BDA(105,400,105,500);
+
+     //I
+    BDA(150,500,200,500);
+    BDA(150,400,200,400);
+    BDA(175,400,175,500);
+
+
+    //T
+    BDA(220,500,270,500);
+    BDA(245,400,245,500);
+    //D
+    BDA(290,400,290,500);
+    MPD_Circle(290,450,1,1,0,0,0,0,1,1);
+
+    //M
+    BDA(360,400,360,500);
+    BDA(430,400,430,500);
+    BDA(360,500,395,450);
+    BDA(430,500,395,450);
+    glPopMatrix();
+
+}
+void air_circle(float a,float b,int radius)
+{
+    float x = radius;
+    float y = 0;
+    glColor3f(a_r,a_g,a_b);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i <= 360; i++)
+    {
+        x = radius * cos(i);
+        y = radius * sin(i);
+        glVertex2f(x + a, y + b);
+    }
+    glEnd();
+}
 void cloud_circle(float a,float b,int radius)
 {
     float x = radius;
@@ -156,6 +383,43 @@ void cloud_circle(float a,float b,int radius)
         glVertex2f(x + a, y + b);
     }
     glEnd();
+}
+void Sun()
+{
+    glPushMatrix();
+    glTranslated(1500 + sun_movement,1800, 0.0);
+    float radius = 100;
+    float x = radius;
+    float y = 0;
+    glColor3f(0.9, 0.7, 0.07);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i <= 360; i++)
+    {
+        x = radius * cos(i);
+        y = radius * sin(i);
+        glVertex2f(x  , y );
+    }
+    glEnd();
+    glPopMatrix();
+}
+void Moon()
+{
+    glPushMatrix();
+    glTranslated(-500 + moon_movement,1800, 0.0);
+    float radius = 100;
+    float x = radius;
+    float y = 0;
+    glColor3ub(220,220,220);
+    glBegin(GL_POLYGON);
+    for (int i = 0; i <= 360; i++)
+    {
+        x = radius * cos(i);
+        y = radius * sin(i);
+        glVertex2f(x,y);
+    }
+    glEnd();
+    glPopMatrix();
+
 }
 void clouds()
 {
@@ -299,23 +563,6 @@ void truck()
     glEnd();
     glPopMatrix();
 }
-void Sun()
-{
-    glPushMatrix();
-    float radius = 100;
-    float x = radius;
-    float y = 0;
-    glColor3f(0.9, 0.7, 0.07);
-    glBegin(GL_POLYGON);
-    for (int i = 0; i <= 360; i++)
-    {
-        x = radius * cos(i);
-        y = radius * sin(i);
-        glVertex2f(x + 1700, y + 1800);
-    }
-    glEnd();
-    glPopMatrix();
-}
 void road()
 {
     glPushMatrix();
@@ -346,7 +593,7 @@ void sky_scraper()
 {
 
     glPushMatrix();
-    glTranslated(1000, 400, 0.0);
+    glTranslated(850, 400, 0.0);
     // glScaled(0.5,0.5,0.0);
     // outer layer
     glBegin(GL_QUADS);
@@ -435,7 +682,7 @@ void Mountain()
 void white_building1()
 {
 
-    glTranslated(100, 400, 0.0);
+    glTranslated(80, 400, 0.0);
     glScaled(0.8, 2, 0.0);
     glColor3f(1, 1, 1);
     // outer layer
@@ -476,7 +723,7 @@ void white_building1()
 void white_building2()
 {
     // white building 2 and 3
-    glTranslated(250, 0, 0.0);
+    glTranslated(150, 0, 0.0);
     // glScaled(0.8, 2, 0.0);
     glColor3f(1, 1, 1);
     // outer layer building 1
@@ -539,8 +786,8 @@ void white_building2()
 void airplane_pole()
 {
     glPushMatrix();
-    glTranslated(1500, 400, 0.0);
-    // glScaled(0.5,0.5,0.0);
+    glTranslated(1280, 400, 0.0);
+    // glScaled(0,0.5,0.0);
     // outer layer
     glBegin(GL_QUADS);
     glColor3f(0, 0, 1);
@@ -584,14 +831,14 @@ void airplane_pole()
     glVertex2f(190, 450);
     glVertex2f(190, 480);
     glVertex2f(60, 480);
-
+    air_circle(125,500,20);
     glEnd();
     glPopMatrix();
 }
 void Building()
 {
     glPushMatrix();
-    glTranslated(600, 400, 0.0);
+    glTranslated(500, 400, 0.0);
     glScaled(0.8, 2, 0.0);
     glColor3f(0, 0, 1);
     // outer layer
@@ -656,7 +903,7 @@ void Building()
 
     // Windows left 2
     glPushMatrix();
-    glTranslated(600, 400, 0.0);
+   glTranslated(500, 400, 0.0);
     glScaled(0.8, 2, 0.0);
     glColor3f(1, 1, 0);
     int b = 20;
@@ -677,7 +924,7 @@ void Building()
 
     // Windows left 1
     glPushMatrix();
-    glTranslated(600, 400, 0.0);
+  glTranslated(500, 400, 0.0);
     glScaled(0.8, 2, 0.0);
     glColor3f(1, 1, 0);
     inc = 0;
@@ -695,7 +942,7 @@ void Building()
 
     // Windows middle
     glPushMatrix();
-    glTranslated(600, 400, 0.0);
+  glTranslated(500, 400, 0.0);
     glScaled(0.8, 2, 0.0);
     glColor3f(1, 1, 0);
     inc = 0;
@@ -713,7 +960,7 @@ void Building()
 
     // Windows right 1
     glPushMatrix();
-    glTranslated(600, 400, 0.0);
+  glTranslated(500, 400, 0.0);
     glScaled(0.8, 2, 0.0);
     glColor3f(1, 1, 0);
 
@@ -732,7 +979,7 @@ void Building()
 
     // Windows right 2
     glPushMatrix();
-    glTranslated(600, 400, 0.0);
+  glTranslated(500, 400, 0.0);
     glScaled(0.8, 2, 0.0);
     glColor3f(1, 1, 0);
 
